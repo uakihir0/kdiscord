@@ -32,6 +32,12 @@ bindings for the Discord HTTP API and a `stream` module implementing the real-ti
 - **Snowflake IDs are always modeled as `String`** to avoid 53-bit precision loss on JS. The JS
   target sets `-Xes-long-as-bigint` to protect genuine `Long` fields (permissions bitfields,
   `heartbeat_interval`).
+- **File uploads:** `MessagesCreateRequest.files` (a `FileContent` list) triggers a
+  `multipart/form-data` request with a `payload_json` part plus one `files[n]` part per file; the
+  `attachments` array in `payload_json` links each file index to its filename/description.
+- **Reactions:** `ReactionsResource` covers create / delete-own / list / delete-all. The `emoji`
+  argument is a unicode emoji or a custom `name:id`, URL-encoded into the path via
+  `encodeURLPathPart()`.
 
 ### Gateway (WebSocket) — `stream` module
 
@@ -65,7 +71,7 @@ v1 uses **uncompressed JSON** transport (no zlib-stream) and honors HTTP 429 `Re
 ### Resource-based API design
 
 - **`Discord`** — main `@JsExport` interface with resource accessors: `users()`, `channels()`,
-  `messages()`, `guilds()`, `gateway()`.
+  `messages()`, `reactions()`, `guilds()`, `gateway()`.
 - **`DiscordFactory`** — `@JsExport` factory: `instance(token)` and `instance(token, apiHost)`.
 - **`DiscordImpl`** — internal implementation that instantiates all resource implementations.
 - Each API category has a **Resource interface** (e.g., `MessagesResource`) with:
