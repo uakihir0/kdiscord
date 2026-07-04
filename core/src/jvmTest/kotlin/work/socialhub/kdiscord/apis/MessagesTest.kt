@@ -1,10 +1,13 @@
 package work.socialhub.kdiscord.apis
 
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import work.socialhub.kdiscord.AbstractTest
+import work.socialhub.kdiscord.api.request.messages.MessagesCreateRequest
 import work.socialhub.kdiscord.api.request.messages.MessagesListRequest
 import kotlin.test.Ignore
 import kotlin.test.Test
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
@@ -12,6 +15,25 @@ import kotlin.test.assertTrue
  * Ignored by default; remove @Ignore to run against a real account.
  */
 class MessagesTest : AbstractTest() {
+
+    @Test
+    @Ignore
+    fun testCreateMessage() = runBlocking {
+        val channelId = checkNotNull(CHANNEL_ID) { "DISCORD_CHANNEL_ID is not set" }
+        val messages = discord().messages()
+
+        val response = messages.create(
+            MessagesCreateRequest(channelId).also {
+                it.content = "Hello from kdiscord! (create message test)"
+            }
+        )
+        println("=== Created Message ===")
+        println(response.json)
+        assertNotNull(response.data.id)
+        println("  ID      > ${response.data.id}")
+        println("  Author  > ${response.data.author?.username}")
+        println("  Content > ${response.data.content}")
+    }
 
     @Test
     @Ignore
