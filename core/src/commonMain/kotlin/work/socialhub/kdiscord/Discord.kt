@@ -4,6 +4,7 @@ import work.socialhub.kdiscord.api.ChannelsResource
 import work.socialhub.kdiscord.api.GatewayResource
 import work.socialhub.kdiscord.api.GuildsResource
 import work.socialhub.kdiscord.api.MessagesResource
+import work.socialhub.kdiscord.api.ReactionsResource
 import work.socialhub.kdiscord.api.UsersResource
 import kotlin.js.JsExport
 
@@ -30,6 +31,9 @@ interface Discord {
 
     /** Messages resource. */
     fun messages(): MessagesResource
+
+    /** Reactions resource. */
+    fun reactions(): ReactionsResource
 
     /** Guilds resource. */
     fun guilds(): GuildsResource
