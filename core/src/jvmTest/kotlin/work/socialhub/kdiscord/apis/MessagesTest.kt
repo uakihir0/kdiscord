@@ -5,6 +5,7 @@ import kotlinx.coroutines.test.runTest
 import work.socialhub.kdiscord.AbstractTest
 import work.socialhub.kdiscord.api.request.messages.MessagesCreateRequest
 import work.socialhub.kdiscord.api.request.messages.MessagesListRequest
+import work.socialhub.kdiscord.entity.share.FileContent
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -33,6 +34,32 @@ class MessagesTest : AbstractTest() {
         println("  ID      > ${response.data.id}")
         println("  Author  > ${response.data.author?.username}")
         println("  Content > ${response.data.content}")
+    }
+
+    @Test
+    @Ignore
+    fun testCreateMessageWithAttachment() = runBlocking {
+        val channelId = checkNotNull(CHANNEL_ID) { "DISCORD_CHANNEL_ID is not set" }
+
+        // A minimal 1x1 transparent PNG.
+        val png = java.util.Base64.getDecoder().decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M8AAAMBAQDJ/pLvAAAAAElFTkSuQmCC"
+        )
+
+        val response = discord().messages().create(
+            MessagesCreateRequest(channelId).also {
+                it.content = "attachment test"
+                it.files = arrayOf(
+                    FileContent(filename = "pixel.png", bytes = png).also { f ->
+                        f.description = "a single pixel"
+                    }
+                )
+            }
+        )
+        println("=== Created Message with Attachment ===")
+        println(response.json)
+        assertNotNull(response.data.id)
+        assertTrue((response.data.attachments?.size ?: 0) >= 1)
     }
 
     @Test

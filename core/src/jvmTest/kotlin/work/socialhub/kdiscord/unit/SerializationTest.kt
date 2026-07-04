@@ -1,6 +1,7 @@
 package work.socialhub.kdiscord.unit
 
 import work.socialhub.kdiscord.entity.Message
+import work.socialhub.kdiscord.entity.MessageReference
 import work.socialhub.kdiscord.internal.InternalUtility
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -53,5 +54,17 @@ class SerializationTest {
         val encoded = InternalUtility.toJson(message)
         assertTrue(encoded.contains("\"content\":\"hi\""))
         assertTrue(!encoded.contains("\"id\""))
+    }
+
+    @Test
+    fun testCamelCaseEncodesToSnakeCase() {
+        // Outgoing payloads must encode camelCase Kotlin names to snake_case for Discord.
+        val ref = MessageReference().also {
+            it.messageId = "123"
+            it.channelId = "456"
+        }
+        val encoded = InternalUtility.toJson(ref)
+        assertTrue(encoded.contains("\"message_id\":\"123\""), "expected snake_case message_id: $encoded")
+        assertTrue(encoded.contains("\"channel_id\":\"456\""), "expected snake_case channel_id: $encoded")
     }
 }
