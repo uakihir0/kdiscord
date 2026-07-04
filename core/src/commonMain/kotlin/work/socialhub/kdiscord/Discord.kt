@@ -5,6 +5,8 @@ import kotlin.js.JsExport
 /**
  * Discord API client.
  * Discord API クライアント。
+ *
+ * Obtain an instance via [DiscordFactory].
  */
 @JsExport
 interface Discord {
@@ -14,4 +16,9 @@ interface Discord {
 
     /** User token used for authentication. */
     val token: String
+
+    companion object {
+        /** Default Discord REST API endpoint. */
+        const val DEFAULT_API_HOST: String = "https://discord.com/api/v10"
+    }
 }
