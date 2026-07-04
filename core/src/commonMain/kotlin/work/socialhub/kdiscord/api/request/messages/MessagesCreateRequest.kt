@@ -1,5 +1,6 @@
 package work.socialhub.kdiscord.api.request.messages
 
+import work.socialhub.kdiscord.entity.share.FileContent
 import kotlin.js.JsExport
 
 /**
@@ -19,4 +20,10 @@ class MessagesCreateRequest(
 
     /** Message id (snowflake) to reply to. */
     var replyMessageId: String? = null
+
+    /**
+     * Files to upload as attachments. When non-empty the request is sent as
+     * multipart/form-data with a `payload_json` part and one `files[n]` part per file.
+     */
+    var files: Array<FileContent>? = null
 }

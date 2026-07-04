@@ -50,19 +50,42 @@ class MessagesResourceImpl(
 
     override suspend fun create(request: MessagesCreateRequest): Response<Message> {
         return proceed {
+            val files = request.files
+            val attachments = files
+                ?.mapIndexed { index, file ->
+                    AttachmentBody(
+                        id = index,
+                        filename = file.filename,
+                        description = file.description,
+                    )
+                }
+                ?.toTypedArray()
+
             val body = CreateMessageBody(
                 content = request.content,
                 tts = request.tts,
                 messageReference = request.replyMessageId?.let {
                     MessageReferenceBody(messageId = it)
                 },
+                attachments = attachments,
             )
-            HttpRequest()
+
+            val http = HttpRequest()
                 .url("$uri/channels/${request.channelId}/messages")
                 .auth()
                 .accept(MediaType.JSON)
-                .json(toJson(body))
-                .post()
+
+            if (files.isNullOrEmpty()) {
+                // JSON body.
+                http.json(toJson(body)).post()
+            } else {
+                // multipart/form-data: payload_json + files[n].
+                http.param("payload_json", toJson(body))
+                files.forEachIndexed { index, file ->
+                    http.file("files[$index]", file.filename, file.bytes)
+                }
+                http.post()
+            }
         }
     }
 
@@ -101,11 +124,19 @@ class MessagesResourceImpl(
         val content: String?,
         val tts: Boolean?,
         val messageReference: MessageReferenceBody?,
+        val attachments: Array<AttachmentBody>?,
     )
 
     @Serializable
     private class MessageReferenceBody(
         val messageId: String,
+    )
+
+    @Serializable
+    private class AttachmentBody(
+        val id: Int,
+        val filename: String,
+        val description: String?,
     )
 
     @Serializable
