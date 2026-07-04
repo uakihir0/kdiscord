@@ -1,5 +1,10 @@
 package work.socialhub.kdiscord
 
+import work.socialhub.kdiscord.api.ChannelsResource
+import work.socialhub.kdiscord.api.GatewayResource
+import work.socialhub.kdiscord.api.GuildsResource
+import work.socialhub.kdiscord.api.MessagesResource
+import work.socialhub.kdiscord.api.UsersResource
 import kotlin.js.JsExport
 
 /**
@@ -16,6 +21,21 @@ interface Discord {
 
     /** User token used for authentication. */
     val token: String
+
+    /** Users resource. */
+    fun users(): UsersResource
+
+    /** Channels resource. */
+    fun channels(): ChannelsResource
+
+    /** Messages resource. */
+    fun messages(): MessagesResource
+
+    /** Guilds resource. */
+    fun guilds(): GuildsResource
+
+    /** Gateway resource. */
+    fun gateway(): GatewayResource
 
     companion object {
         /** Default Discord REST API endpoint. */
