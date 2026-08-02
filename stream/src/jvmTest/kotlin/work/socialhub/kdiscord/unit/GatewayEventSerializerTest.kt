@@ -1,8 +1,10 @@
 package work.socialhub.kdiscord.unit
 
 import work.socialhub.kdiscord.entity.gateway.event.MessageCreateEvent
+import work.socialhub.kdiscord.entity.gateway.event.MessageUpdateEvent
 import work.socialhub.kdiscord.entity.gateway.event.ReadyEvent
 import work.socialhub.kdiscord.entity.gateway.event.UnknownEvent
+import work.socialhub.kdiscord.entity.UnknownMessageComponent
 import work.socialhub.kdiscord.internal.InternalUtility
 import work.socialhub.kdiscord.stream.internal.GatewayEventSerializer
 import kotlin.test.Test
@@ -38,6 +40,29 @@ class GatewayEventSerializerTest {
     }
 
     @Test
+    fun testDecodeRichMessageCreateWithUnknownFields() {
+        val event = GatewayEventSerializer.decode("MESSAGE_CREATE", richMessage())
+
+        assertTrue(event is MessageCreateEvent)
+        assertEquals("Example gateway embed", event.message.embeds?.single()?.title)
+        assertEquals("Gateway rich embed body.", event.message.embeds?.single()?.description)
+        assertEquals("Environment", event.message.embeds?.single()?.fields?.single()?.name)
+        assertEquals("AQIDBA==", event.message.embeds?.single()?.image?.placeholder)
+        assertTrue(event.message.components?.single() is UnknownMessageComponent)
+    }
+
+    @Test
+    fun testDecodeRichMessageUpdateWithUnknownFields() {
+        val event = GatewayEventSerializer.decode("MESSAGE_UPDATE", richMessage())
+
+        assertTrue(event is MessageUpdateEvent)
+        assertEquals("300000000000000001", event.message.id)
+        assertEquals("https://cdn.example.com/gateway.png", event.message.embeds?.single()?.image?.url)
+        assertEquals(1, event.message.reactions?.single()?.countDetails?.burst)
+        assertTrue(event.message.components?.single() is UnknownMessageComponent)
+    }
+
+    @Test
     fun testUnknownEventFallsBack() {
         // A brand-new event type kdiscord doesn't model must not crash.
         val d = element("""{ "some": "future_payload" }""")
@@ -55,4 +80,51 @@ class GatewayEventSerializerTest {
         val event = GatewayEventSerializer.decode("MESSAGE_CREATE", d)
         assertTrue(event is UnknownEvent)
     }
+
+    private fun richMessage() = element(
+        """
+        {
+          "id": "300000000000000001",
+          "channel_id": "300000000000000002",
+          "content": "",
+          "embeds": [
+            {
+              "type": "rich",
+              "title": "Example gateway embed",
+              "description": "Gateway rich embed body.",
+              "fields": [
+                { "name": "Environment", "value": "Test", "inline": true }
+              ],
+              "image": {
+                "url": "https://cdn.example.com/gateway.png",
+                "width": 800,
+                "height": 450,
+                "content_type": "image/png",
+                "placeholder": "AQIDBA==",
+                "placeholder_version": 1
+              },
+              "future_embed_field": "ignored"
+            }
+          ],
+          "reactions": [
+            {
+              "count": 2,
+              "count_details": { "burst": 1, "normal": 1 },
+              "me": false,
+              "me_burst": false,
+              "emoji": { "name": "sparkles" },
+              "burst_colors": ["#5865F2"]
+            }
+          ],
+          "components": [
+            {
+              "type": 999,
+              "id": 1,
+              "future_component_data": { "label": "Preserved" }
+            }
+          ],
+          "future_message_field": { "version": 2 }
+        }
+        """.trimIndent()
+    )
 }

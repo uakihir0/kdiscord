@@ -1,0 +1,88 @@
+{
+  "id": "100000000000000001",
+  "channel_id": "100000000000000002",
+  "guild_id": "100000000000000003",
+  "webhook_id": "100000000000000004",
+  "author": {
+    "id": "100000000000000004",
+    "username": "Example Webhook",
+    "discriminator": "0000",
+    "avatar": "anonymized-avatar-hash",
+    "clan": {
+      "identity_guild_id": "100000000000000003",
+      "identity_enabled": true,
+      "tag": "EXMP",
+      "badge": "anonymized-badge-hash"
+    },
+    "primary_guild": {
+      "identity_guild_id": "100000000000000003",
+      "identity_enabled": true,
+      "tag": "EXMP",
+      "badge": "anonymized-badge-hash"
+    }
+  },
+  "content": "",
+  "timestamp": "2026-01-02T03:04:05.678000+00:00",
+  "edited_timestamp": null,
+  "tts": false,
+  "mention_everyone": false,
+  "mentions": [],
+  "mention_roles": [],
+  "attachments": [],
+  "embeds": [
+    {
+      "title": "Example release",
+      "type": "rich",
+      "description": "An anonymized rich embed body.",
+      "url": "https://example.com/releases/1",
+      "color": 3447003,
+      "content_scan_version": 1,
+      "fields": [
+        {
+          "name": "Status",
+          "value": "Available",
+          "inline": true
+        },
+        {
+          "name": "Notes",
+          "value": "All identifiers and URLs are synthetic.",
+          "inline": false
+        }
+      ],
+      "image": {
+        "url": "https://cdn.example.com/images/release.png",
+        "proxy_url": "https://media.example.com/images/release.png",
+        "width": 1200,
+        "height": 630,
+        "content_type": "image/png",
+        "placeholder": "AAECAwQFBgcICQ==",
+        "placeholder_version": 1
+      }
+    }
+  ],
+  "reactions": [
+    {
+      "count": 3,
+      "count_details": {
+        "burst": 1,
+        "normal": 2
+      },
+      "me": true,
+      "burst_colors": [
+        "#5865F2",
+        "#EB459E"
+      ],
+      "burst_count": 1,
+      "burst_me": true,
+      "me_burst": true,
+      "emoji": {
+        "id": null,
+        "name": "sparkles"
+      }
+    }
+  ],
+  "pinned": false,
+  "type": 0,
+  "flags": 0,
+  "components": []
+}
