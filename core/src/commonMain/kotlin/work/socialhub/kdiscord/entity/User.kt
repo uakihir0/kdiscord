@@ -57,4 +57,26 @@ class User {
 
     /** The public flags on a user's account. */
     var publicFlags: Int? = null
+
+    /** The user's legacy guild identity, when supplied by the client API. */
+    var clan: UserPrimaryGuild? = null
+
+    /** The user's primary guild identity. */
+    var primaryGuild: UserPrimaryGuild? = null
+}
+
+@JsExport
+@Serializable
+class UserPrimaryGuild {
+    /** The id of the user's primary guild (snowflake). */
+    var identityGuildId: String? = null
+
+    /** Whether the user is displaying the primary guild's server tag. */
+    var identityEnabled: Boolean? = null
+
+    /** The text of the user's server tag. */
+    var tag: String? = null
+
+    /** The server tag badge hash. */
+    var badge: String? = null
 }
