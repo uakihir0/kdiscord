@@ -58,6 +58,12 @@ class Message {
     /** Type of message. */
     var type: Int? = null
 
+    /** Message flags combined as a bitfield. */
+    var flags: Int? = null
+
+    /** Components included with this message. */
+    var components: Array<MessageComponent>? = null
+
     /** The id of the guild the message was sent in (snowflake). */
     var guildId: String? = null
 
