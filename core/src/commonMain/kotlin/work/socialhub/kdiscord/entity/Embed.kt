@@ -48,6 +48,9 @@ class Embed {
 
     /** Fields information. */
     var fields: Array<EmbedField>? = null
+
+    /** Version of Discord's content scan for this embed. */
+    var contentScanVersion: Int? = null
 }
 
 @JsExport
@@ -65,6 +68,9 @@ class EmbedMedia {
     var proxyUrl: String? = null
     var height: Int? = null
     var width: Int? = null
+    var contentType: String? = null
+    var placeholder: String? = null
+    var placeholderVersion: Int? = null
 }
 
 @JsExport
